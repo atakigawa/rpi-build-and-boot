@@ -7,7 +7,9 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/precise32"
 
-  config.vm.network "public_network", bridge: 'en5: Thunderbolt Ethernet', ip: "10.0.0.1"
+  # check interface name with `VBoxManage list bridgedifs`
+  config.vm.network :public_network, :bridge => "en5: USB Ethernet", ip: "10.0.0.1", :netmask => "255.0.0.0"
+
   #config.vm.network "private_network", type: "dhcp"
   #if Vagrant.has_plugin?("vagrant-cachier")
   #  config.cache.scope = :box
@@ -17,6 +19,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #  #}
   #end
 
+  config.vm.define "rpi_build_env" do |rpi_build_env|
+  end
 
   # If true, then any SSH connections made will enable agent forwarding.
   # Default value: false
@@ -32,13 +36,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-   config.vm.provider "virtualbox" do |vb|
-     vb.gui = false
-  
-     ## Use VBoxManage to customize the VM. For example to change memory:
-     #vb.customize ["modifyvm", :id, "--memory", "1024"]
-   end
-  
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+
+    ## Use VBoxManage to customize the VM. For example to change memory:
+    #vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
   end

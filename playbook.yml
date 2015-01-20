@@ -3,6 +3,7 @@
   remote_user: vagrant
   sudo: yes
   vars:
+    img_name: 2014-12-24-wheezy-raspbian.img
     offset_boot: 4194304
     offset_root: 62914560
   tasks:
@@ -26,8 +27,8 @@
     - file: path=/opt/raspberrypi/boot state=directory
     - file: path=/opt/raspberrypi/root state=directory
 
-    - mount: src="/vagrant/image.img" name="/opt/raspberrypi/boot" fstype="auto"  opts="loop,offset={{offset_boot}},noauto" state="mounted"
-    - mount: src="/vagrant/image.img" name="/opt/raspberrypi/root" fstype="auto"  opts="loop,offset={{offset_root}},noauto" state="mounted"
+    - mount: src="/vagrant/{{img_name}}" name="/opt/raspberrypi/boot" fstype="auto"  opts="loop,offset={{offset_boot}},noauto" state="mounted"
+    - mount: src="/vagrant/{{img_name}}" name="/opt/raspberrypi/root" fstype="auto"  opts="loop,offset={{offset_root}},noauto" state="mounted"
 
     # the pi is unbootable unless it is told not to mount the root filesystem from the card!
     - lineinfile: dest=/opt/raspberrypi/root/etc/fstab regexp="^\/dev\/mmcblk0p2" state="absent"
